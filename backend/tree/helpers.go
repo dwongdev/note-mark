@@ -7,22 +7,32 @@ import (
 )
 
 // Filter a node tree by using the AccessControl data.
-func FilteredNodeTree(tree core.NodeTree, username *core.Username) core.NodeTree {
+func FilteredNodeTree(
+	// Unfiltered node tree of another user
+	tree core.NodeTree,
+	// Username of user trying to access data
+	requster *core.Username,
+) core.NodeTree {
 	filteredMap := core.NodeTree{}
 	for slug, node := range tree {
-		if filteredNode := FilteredNode(*node, username); filteredNode != nil {
+		if filteredNode := FilteredNode(*node, requster); filteredNode != nil {
 			filteredMap[slug] = node
 		}
 	}
 	return filteredMap
 }
 
-func FilteredNode(node core.Node, username *core.Username) *core.Node {
+func FilteredNode(
+	// Unfiltered node from another user's tree
+	node core.Node,
+	// Username of user trying to access data
+	requester *core.Username,
+) *core.Node {
 	if node.FrontMatter.AccessControl != nil {
 		if node.FrontMatter.AccessControl.PublicRead {
 			return &node
-		} else if username != nil {
-			if _, exists := node.FrontMatter.AccessControl.Users[*username]; exists {
+		} else if requester != nil {
+			if _, exists := node.FrontMatter.AccessControl.Users[*requester]; exists {
 				return &node
 			}
 		}

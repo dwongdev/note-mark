@@ -37,7 +37,8 @@ func (s *TreeService) GetTreeForUser(
 	if optionalAuthUser == nil {
 		return tree.FilteredNodeTree(nodeTree, nil), nil
 	} else if optionalAuthUser.Username != string(username) {
-		return tree.FilteredNodeTree(nodeTree, &username), nil
+		requester := (*core.Username)(&optionalAuthUser.Username)
+		return tree.FilteredNodeTree(nodeTree, requester), nil
 	}
 	return nodeTree, nil
 }
