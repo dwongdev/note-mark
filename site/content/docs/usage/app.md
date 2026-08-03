@@ -24,3 +24,6 @@ Depending on the operating system keybindings may be slightly different. On Wind
 - De-Indent: `<mod>[` or `<shift><tab>`
 - Bold: `<mod>b`
 - Italic: `<mod>i`
+
+## Access Control
+At the moment users granted with "write" access can modify the access-control data of the shared note/s. Do not share notes with "write" access if you cannot trust them.
