@@ -1,5 +1,5 @@
 baseURL = "https://notemark.docs.enchantedcode.co.uk/"
-languageCode = "en"
+locale ="en"
 title = "Note Mark"
 copyright = "Leo Spratt"
 
