@@ -59,7 +59,7 @@ export default function NoteFormFields(props: {
             placeholder="e.g. some/path"
             aria-label="path"
           />
-          <span class="label">{`/${props.fields.slug}`}</span>
+          <span class="label overflow-x-auto max-w-64">{`/${props.fields.slug}`}</span>
         </span>
         <p class="label">Where note will be created, leave blank for placing at top level.</p>
       </fieldset>
