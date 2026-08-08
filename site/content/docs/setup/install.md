@@ -4,9 +4,10 @@ title: 01 - Install
 
 > Looking to migrate your data from V0.19? [see migration guide]({{< ref "migrate-from-v0" >}})
 
-## General Requirements
+## Important Notes
 - A file-system that is case-sensitive, hosting on a case-insensitive system will put your data at risk
 - A Unix/Linux system, Windows is not supported
+- A reverse-proxy should be added and rate-limiting for all `/api/auth/*` routes
 
 ## Docker (Official)
 Note Mark is installed by using the all-in-one image, making deployment easier and more consistent.
