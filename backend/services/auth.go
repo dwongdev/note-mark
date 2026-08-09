@@ -108,6 +108,12 @@ func (s *AuthService) getUserForTokenExchangeGrant(request core.TokenExchangeGra
 	if s.appConfig.OIDC == nil {
 		return uuid.Nil, core.ErrFeatureDisabled
 	}
+	// validate ID-Token
+	if request.ActorToken != "" {
+		if _, err := s.OidcVerifier.Verify(context.Background(), request.ActorToken); err != nil {
+			return uuid.Nil, core.ErrInvalidCredentials
+		}
+	}
 	// TODO use ActorToken when available
 	userInfo, err := s.OidcProvider.UserInfo(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{
 		AccessToken: request.SubjectToken,
