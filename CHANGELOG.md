@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-08-10
+### Fixed
+- security vulnerability GHSA-3j7j-3hq5-h3rp; No audience check during RFC 8693 token exchange
+- security vulnerability GHSA-7g73-5rrw-446p; Tree listing filters on the owner instead of the requester
+- #283; long slugs will go out of bounds
+### Changed
+- Bump deps
+- add a minimum password length
+- add some hosting documentation
+
 ## [1.0.2] - 2026-07-14
 ### Changed
 - use inline errors for user settings
