@@ -108,27 +108,42 @@ func (s *AuthService) getUserForTokenExchangeGrant(request core.TokenExchangeGra
 	if s.appConfig.OIDC == nil {
 		return uuid.Nil, core.ErrFeatureDisabled
 	}
-	// validate ID-Token
-	if request.ActorToken != "" {
-		if _, err := s.OidcVerifier.Verify(context.Background(), request.ActorToken); err != nil {
-			return uuid.Nil, core.ErrInvalidCredentials
+	var (
+		userSub  string
+		username string
+	)
+	if idToken, err := s.OidcVerifier.Verify(context.Background(), request.ActorToken); err != nil {
+		// validate ID-Token
+		return uuid.Nil, core.ErrInvalidCredentials
+	} else {
+		var claims Claims
+		userSub = idToken.Subject
+		if idToken.Claims(&claims) == nil {
+			// use included userinfo claims
+			username = claims.PreferredUsername
 		}
 	}
-	// TODO use ActorToken when available
-	userInfo, err := s.OidcProvider.UserInfo(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{
-		AccessToken: request.SubjectToken,
-	}))
-	if err != nil {
-		return uuid.Nil, err
+	if username == "" {
+		userInfo, err := s.OidcProvider.UserInfo(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{
+			AccessToken: request.SubjectToken,
+		}))
+		if err != nil {
+			return uuid.Nil, err
+		}
+		if userInfo.Subject != userSub {
+			// subject token was for a different user than actor token
+			return uuid.Nil, core.ErrInvalidCredentials
+		}
+		var claims Claims
+		if err := userInfo.Claims(&claims); err != nil {
+			return uuid.Nil, err
+		}
+		if claims.PreferredUsername == "" {
+			return uuid.Nil, errors.New("oidc 'preferred_username' is blank or missing")
+		}
+		username = claims.PreferredUsername
 	}
-	var claims Claims
-	if err := userInfo.Claims(&claims); err != nil {
-		return uuid.Nil, err
-	}
-	if claims.PreferredUsername == "" {
-		return uuid.Nil, errors.New("oidc 'preferred_username' is blank or missing")
-	}
-	return s.getOrCreateOidcUser(claims.PreferredUsername, userInfo.Subject)
+	return s.getOrCreateOidcUser(username, userSub)
 }
 
 func (s *AuthService) getOrCreateOidcUser(username string, userSub string) (uuid.UUID, error) {
