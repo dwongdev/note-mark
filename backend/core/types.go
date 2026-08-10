@@ -41,11 +41,11 @@ type NodeTree map[NodeSlug]*Node
 
 type AccessControl struct {
 	PublicRead bool                           `json:"publicRead,omitempty" yaml:"publicRead"`
-    Users      map[Username]AccessControlMode `json:"users,omitempty" yaml:"users,omitempty"`
+	Users      map[Username]AccessControlMode `json:"users,omitempty" yaml:"users,omitempty"`
 }
 
 type FrontMatter struct {
-    Title         string         `json:"title,omitempty" yaml:"title"`
+	Title         string         `json:"title,omitempty" yaml:"title"`
 	AccessControl *AccessControl `json:"accessControl,omitempty" yaml:"accessControl,omitempty"`
 }
 
@@ -78,7 +78,7 @@ type ServerInfo struct {
 type CreateUserWithPassword struct {
 	Username string  `json:"username" minLength:"3" maxLength:"30" pattern:"^[a-zA-Z0-9]+$"`
 	Name     *string `json:"name" require:"false" minLength:"3" maxLength:"128"`
-	Password string  `json:"password" maxLength:"128"`
+	Password string  `json:"password" minLength:"8" maxLength:"128"`
 }
 
 type UpdateUser struct {
@@ -87,7 +87,7 @@ type UpdateUser struct {
 
 type UpdateUserPassword struct {
 	ExistingPassword string `json:"existingPassword" maxLength:"128"`
-	NewPassword      string `json:"newPassword" maxLength:"128"`
+	NewPassword      string `json:"newPassword" minLength:"8" maxLength:"128"`
 }
 
 type ModTime struct {
