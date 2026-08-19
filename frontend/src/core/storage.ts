@@ -47,7 +47,7 @@ class StorageHandler {
     return [
       () => {
         const v = setting()
-        return v !== null ? JSON.parse(v) : null
+        return v !== null ? JSON.parse(v) as T : null
       },
       (value: T | null) => {
         setSetting(JSON.stringify(value))
