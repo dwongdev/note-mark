@@ -37,6 +37,7 @@ type AppConfig struct {
 	AuthToken                 AuthTokenConfig `envPrefix:"AUTH_TOKEN__"`
 	DataPath                  string          `env:"DATA_PATH,notEmpty" validate:"dirpath,required"`
 	StaticPath                string          `env:"STATIC_PATH" validate:"omitempty,dirpath"`
+	CustomCSSPath             string          `env:"CUSTOM_CSS_PATH"  validate:"omitempty,file"`
 	PublicUrl                 string          `env:"PUBLIC_URL,notEmpty" validate:"http_url,endsnotwith=/,required"`
 	EnableInternalSignup      bool            `env:"ENABLE_INTERNAL_SIGNUP,notEmpty" envDefault:"true"`
 	EnableInternalLogin       bool            `env:"ENABLE_INTERNAL_LOGIN,notEmpty" envDefault:"true"`

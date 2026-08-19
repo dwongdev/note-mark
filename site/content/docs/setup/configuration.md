@@ -14,6 +14,7 @@ Configuration of the Note Mark is done through environment variables. See the be
 | | | | | |
 | DATA_PATH   | Where to store app data            |   | /data   |
 | STATIC_PATH | Host static files                  | - | /static |
+| CUSTOM_CSS_PATH | Where to find custom css       | - | -       |
 | PUBLIC_URL  | The URL where app is accessed from |   |         |
 | | | | | |
 | ENABLE_INTERNAL_SIGNUP       | Whether to enable new internal accounts            | true | true |

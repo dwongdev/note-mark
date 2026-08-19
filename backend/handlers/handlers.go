@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
@@ -94,6 +96,13 @@ func SetupHandlers(
 		dao,
 		tc,
 	), int64(appConfig.FileSizeLimit), &authProvider)
+	mux.Get("/api/static/custom.css", func(w http.ResponseWriter, r *http.Request) {
+		if appConfig.CustomCSSPath != "" {
+			http.ServeFile(w, r, appConfig.CustomCSSPath)
+		} else {
+			http.ServeContent(w, r, "custom.css", time.UnixMilli(1), bytes.NewReader([]byte{}))
+		}
+	})
 	if len(appConfig.StaticPath) != 0 {
 		if _, err := os.Stat(appConfig.StaticPath); errors.Is(err, os.ErrNotExist) {
 			return nil, err
