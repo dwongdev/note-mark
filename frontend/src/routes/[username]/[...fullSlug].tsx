@@ -3,7 +3,7 @@ import { batch, createEffect, createResource, createSignal, on, Show } from "sol
 import Breadcrumb from "~/components/Breadcrumb";
 import Icon from "~/components/Icon";
 import LoadingRing from "~/components/loading/LoadingRing";
-import AssetsModal, { AssetEntry } from "~/components/modals/Assets";
+import AssetsModal from "~/components/modals/Assets";
 import CreateNoteModal from "~/components/modals/CreateNote";
 import PrintModal from "~/components/modals/Print";
 import UpdateNoteModal from "~/components/modals/UpdateNote";
@@ -16,7 +16,7 @@ import Api, { ApiError, HttpErrors } from "~/core/api";
 import { copyToClipboard, download, StringSource } from "~/core/helpers";
 import { createNoteEngine } from "~/core/note-engine";
 import StorageHandler from "~/core/storage"
-import type { NodeEntry, NodeSlug } from "~/core/types";
+import type { AssetEntries, NodeEntry } from "~/core/types";
 
 function NoteNode() {
   const params = useParams<{
@@ -132,22 +132,15 @@ function NoteNode() {
   }
 
   const onAssetsClick = () => {
-    const currentNode = nodeTree.tryGetNode(decodedFullSlug())
-    if (currentNode === null || currentNode.type !== "note") { return }
-    const assetEntries = Object
-      .values(currentNode.children)
-      .filter((v) => v.type === "asset")
-      .reduce((obj, item) => (obj[item.slug] = {
-        fullSlug: `${decodedFullSlug()}/${item.slug}`,
-        modTime: item.modTime,
-      }, obj), {})
+    const assetEntries = nodeTree.tryGetNodeAssetEntries(decodedFullSlug())
+    if (assetEntries === undefined) { return }
     setModal({
       component: AssetsModal,
       props: {
         currentUsername: params.username,
         currentParentSlug: decodedFullSlug(),
         assets: assetEntries,
-        onClose: (newAssets: Record<NodeSlug, AssetEntry>) => {
+        onClose: (newAssets: AssetEntries) => {
           clearModal()
           batch(() => {
             for (const [slug, entry] of Object.entries(newAssets)) {

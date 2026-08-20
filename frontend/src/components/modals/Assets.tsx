@@ -1,4 +1,4 @@
-import { NodeSlug } from "~/core/types";
+import { AssetEntries, AssetEntry, NodeSlug } from "~/core/types";
 import BaseModal from "./Base";
 import Icon from "../Icon";
 import { createStore } from "solid-js/store";
@@ -8,11 +8,6 @@ import Api from "~/core/api";
 import AlertBox from "../AlertBox";
 import { copyToClipboard } from "~/core/helpers";
 import { ToastType, useToast } from "~/contexts/ToastProvider";
-
-export interface AssetEntry {
-  fullSlug: NodeSlug | null
-  modTime: string
-}
 
 const createAssetAction = action(async (where: { username: string, parentSlug: string }, formData: FormData) => {
   const slug = formData.get("filename")?.toString()
@@ -54,8 +49,8 @@ const deleteAssetAction = action(async (where: { username: string, parentSlug: s
 export default function AssetsModal(props: {
   currentUsername: string,
   currentParentSlug: string,
-  assets: Record<NodeSlug, AssetEntry>,
-  onClose: (assets: Record<NodeSlug, AssetEntry>) => any,
+  assets: AssetEntries,
+  onClose: (assets: AssetEntries) => any,
 }) {
   let assetUploadInput: HTMLInputElement
   const { pushToast } = useToast()

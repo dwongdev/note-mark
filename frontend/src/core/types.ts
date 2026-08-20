@@ -79,3 +79,10 @@ export interface User extends ModTime {
   username: string
   name?: string
 }
+
+export interface AssetEntry {
+  fullSlug: NodeSlug | null
+  modTime: string
+}
+
+export type AssetEntries = Record<NodeSlug, AssetEntry>

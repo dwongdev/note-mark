@@ -1,5 +1,5 @@
 import { accessControlModeToLevelNumber, getAccessControlModeForUser } from "./helpers"
-import type { AccessControlMode, Frontmatter, NodeEntry, NodeTree, NodeTreeNode } from "./types"
+import type { AccessControlMode, AssetEntries, Frontmatter, NodeEntry, NodeTree, NodeTreeNode } from "./types"
 
 /**
  * In-memory insertion of a node
@@ -166,4 +166,17 @@ export function getNodeAccessControlMode(
     } else { throw "expected node" }
   }
   return mode
+}
+
+export function tryGetNodeAssetEntries(nodeTree: NodeTree, fullSlug: string): AssetEntries | undefined {
+  const noteNode = tryGetNode(nodeTree, fullSlug)
+  if (noteNode !== null && noteNode.type === "note") {
+    return Object
+      .values(noteNode.children)
+      .filter((v) => v.type === "asset")
+      .reduce((obj, item) => (obj[item.slug] = {
+        fullSlug: `${fullSlug}/${item.slug}`,
+        modTime: item.modTime,
+      }, obj), {})
+  }
 }
