@@ -279,6 +279,7 @@ function NoteNode() {
           saved={saved}
           setSaved={setSaved}
           saving={() => saveSubmission.pending ?? false}
+          assets={() => nodeTree.tryGetNodeAssetEntries(decodedFullSlug())}
         />
       </Show>
     </div>

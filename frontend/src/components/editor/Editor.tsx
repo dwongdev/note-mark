@@ -12,6 +12,7 @@ import CreateLinkModal from "./modals/CreateLink";
 import CreateImageModal from "./modals/CreateImage";
 import CreateTableModal from "./modals/CreateTable";
 import StorageHandler from "~/core/storage";
+import { AssetEntries } from "~/core/types";
 
 const editorTheme = EditorView.baseTheme({
   "&.cm-editor": {
@@ -56,6 +57,7 @@ export type EditorProps = {
   saving: () => boolean
   isFullscreen: Accessor<boolean>
   onContentChange?: (content: string) => any
+  assets: () => AssetEntries
 }
 
 export default function Editor(props: EditorProps) {
@@ -385,7 +387,8 @@ export default function Editor(props: EditorProps) {
                     }
                     clearModal()
                     editor.focus()
-                  }
+                  },
+                  assets: props.assets,
                 }
               })}
             >

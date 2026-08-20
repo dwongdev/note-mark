@@ -8,6 +8,7 @@ import { ToastType, useToast } from "~/contexts/ToastProvider";
 import Editor from "~/components/editor/Editor";
 import Split from "split.js";
 import { NoteEngineReadOnly } from "~/core/note-engine";
+import { AssetEntries } from "~/core/types";
 
 const AUTO_SAVE_TIMEOUT = 2400;
 
@@ -44,6 +45,7 @@ const EditorSplitScreen: Component<{ noteProps: NoteProps, isFullscreen: Accesso
           setSaved={noteProps.setSaved}
           saving={noteProps.saving}
           isFullscreen={isFullscreen}
+          assets={noteProps.assets}
         />
       </div>
       <div ref={(el) => renderedElement = el} class="shadow-glass rounded-box p-2 w-full max-h-[90vh] overflow-y-scroll">
@@ -62,6 +64,7 @@ type NoteProps = {
   saved: Accessor<boolean>
   setSaved: Setter<boolean>
   saving: () => boolean
+  assets: () => AssetEntries
 }
 
 export default function Note(props: NoteProps) {
@@ -174,6 +177,7 @@ export default function Note(props: NoteProps) {
             setSaved={props.setSaved}
             saving={props.saving}
             isFullscreen={isFullscreen}
+            assets={props.assets}
           />
         </Match>
         <Match when={props.mode === NoteMode.EDIT_SPLIT}>
