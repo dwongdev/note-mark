@@ -11,7 +11,7 @@ import (
 
 // Creates a secure absolute node path.
 //
-// This will ensure a slug cannot cause a path escape outside or root/user.
+// This will ensure a slug cannot cause a path escape outside of root/user.
 func createSecureNodePath(
 	rootPath string,
 	username core.Username,
@@ -24,6 +24,9 @@ func createSecureNodePath(
 	if slug == "" || slug == "." {
 		return "", errors.Join(fmt.Errorf("slug must not be empty"), core.ErrSlugInvalid)
 	}
+	if !core.IsValidUsername(string(username)) {
+		return "", fmt.Errorf("username is invalid")
+	}
 	userAbsPath := filepath.Join(rootPath, string(username))
 	nodeAbsPath := filepath.Join(rootPath, string(username), slug)
 	safePrefix := userAbsPath + string(filepath.Separator)
@@ -31,4 +34,19 @@ func createSecureNodePath(
 		return "", errors.Join(fmt.Errorf("slug would escape: '%s'", nodeAbsPath), core.ErrSlugInvalid)
 	}
 	return nodeAbsPath, nil
+}
+
+
+// Creates a secure absolute user path.
+//
+// This will ensure a username cannot cause a path escape outside of root/user.
+func createSecureUserPath(rootPath string, username core.Username) (string, error) {
+	if !filepath.IsAbs(rootPath) {
+		return "", fmt.Errorf("rootPath not abs '%s'", rootPath)
+	}
+	if !core.IsValidUsername(string(username)) {
+		return "", fmt.Errorf("username is invalid")
+	}
+	userAbsPath := filepath.Join(rootPath, string(username))
+	return userAbsPath, nil
 }

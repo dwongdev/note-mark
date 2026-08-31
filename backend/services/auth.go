@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"log"
+	"log/slog"
 	"time"
 
 	"github.com/coreos/go-oidc/v3/oidc"
@@ -142,6 +143,10 @@ func (s *AuthService) getUserForTokenExchangeGrant(request core.TokenExchangeGra
 			return uuid.Nil, errors.New("oidc 'preferred_username' is blank or missing")
 		}
 		username = claims.PreferredUsername
+	}
+	if !core.IsValidUsername(username) {
+		slog.Warn("OIDC login failed, due to validation error. Configured provider may need to give a alternative compatible preferred_username", "username", username)
+		return uuid.Nil, core.ErrInvalidCredentials
 	}
 	return s.getOrCreateOidcUser(username, userSub)
 }

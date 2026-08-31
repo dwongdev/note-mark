@@ -301,7 +301,10 @@ func (sc *DiskStorageController) DeleteAssetNode(
 }
 
 func (sc *DiskStorageController) DeleteUser(username core.Username) error {
-	absPath := filepath.Join(sc.rootPath, string(username))
+	absPath, err := createSecureUserPath(sc.rootPath, username)
+	if err != nil {
+		return err
+	}
 	if err := os.RemoveAll(absPath); err != nil && !errors.Is(err, os.ErrNotExist) {
 		return err
 	}
